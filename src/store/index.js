@@ -2,66 +2,22 @@
 /* eslint-disable indent */
 /* eslint-disable eol-last */
 import { createStore } from 'vuex'
+import createPersistedstate from 'vuex-persistedstate'
 
-const moduleA = {
-    state: {
-        username: 'moduleA'
-    },
-    getters: {
-        newName(state) {
-            return state.username + '!!!'
-        }
-    }
-}
-const moduleB = {
-    namespaced: true,
-    state: {
-        username: 'moduleB'
-    },
-    getters: {
-        newName(state) {
-            return state.username + '!!!'
-        }
-    },
-    mutations: {
-        updateName(state) {
-            state.username = 'ls'
-        }
-    },
-    actions: {
-        updateName(ctx) {
-            setTimeout(() => {
-                ctx.commit('updateName')
-            }, 2000)
-        }
-    }
-}
+import user from './modules/user'
+import cart from './modules/cart'
+import category from './modules/category'
+
 export default createStore({
-        modules: {
-            moduleA,
-            moduleB
-        }
-    })
-    // export default createStore({
-    //     state: {
-    //         username: 'zs'
-    //     },
-    //     getters: {
-    //         newName(state) {
-    //             return state.username + '???'
-    //         }
-    //     },
-    //     mutations: {
-    //         updateName(state) {
-    //             state.username = 'ls'
-    //         }
-    //     },
-    //     actions: {
-    //         updateName(ctx) {
-    //             setTimeout(() => {
-    //                 ctx.commit('updateName')
-    //             }, 2000)
-    //         }
-    //     },
-    //     modules: {}
-    // })
+    modules: {
+        user,
+        cart,
+        category
+    },
+    plugins: [
+        createPersistedstate({
+            key: 'erabbit-client-pc-store',
+            paths: ['user', 'cart']
+        })
+    ]
+})
