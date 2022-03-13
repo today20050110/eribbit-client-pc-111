@@ -114,3 +114,20 @@
       }
     }
   }
+// 麵包屑切換動畫
+// 進入: 右側20px的位移 透明度0 做過渡0.5s 本來位置 沒有位移 透明度1
+// 離開: 本來位置 沒有位移 透明度1 做過渡0.5s 右側20px的位移 透明度0
+  .fade-right-enter-to,
+  .fade-right-leave-from{
+    opacity: 1;
+    transform: none;
+  }
+  .fade-right-enter-active,
+  .fade-right-leave-active{
+    transition: all .5s;
+  }
+  .fade-right-enter-from,
+  .fade-right-leave-to{
+    opacity: 0;
+    transform: translate3d(20px,0,0);
+  }

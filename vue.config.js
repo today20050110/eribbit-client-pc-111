@@ -1,3 +1,4 @@
+/* eslint-disable eol-last */
 /* eslint-disable indent */
 const path = require('path')
 module.exports = {
@@ -11,5 +12,13 @@ module.exports = {
                 path.join(__dirname, './src/assets/styles/mixins.less')
             ]
         }
+    },
+    chainWebpack: config => {
+        // 需要配置10kb下的图片打包成base64的格式
+        config.module
+            .rule('images')
+            .use('url-loader')
+            .loader('url-loader')
+            .tap(options => Object.assign(options, { limit: 10000 }))
     }
 }
