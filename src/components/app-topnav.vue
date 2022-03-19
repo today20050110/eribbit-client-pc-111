@@ -4,10 +4,10 @@
       <ul>
         <template v-if="profile.token">
           <li><a href="javascript:;"><i class="iconfont icon-user"></i>{{profile.account}}</a></li>
-          <li><a href="javascript:;">退出登录</a></li>
+          <li><a @click="logout()" href="javascript:;">退出登录</a></li>
         </template>
         <template v-else>
-          <li><a href="javascript:;">请先登录</a></li>
+          <li><router-link to="/login">请先登录</router-link></li>
           <li><a href="javascript:;">免费注册</a></li>
         </template>
         <li><a href="javascript:;">我的订单</a></li>
@@ -23,6 +23,7 @@
 /* eslint-disable indent */
 import { useStore } from 'vuex'
 import { computed } from 'vue'
+import { useRouter } from 'vue-router'
 export default {
   name: 'AppTopnav',
   // 獲取用戶的登陸信息才能控制切換導航菜單
@@ -32,7 +33,17 @@ export default {
       const profile = computed(() => {
           return store.state.user.profile
       })
-      return { profile }
+      // 退出登录
+    // 1. 清空本地存储信息和vuex的用户信息
+    // 2. 跳转登录
+    const router = useRouter()
+    const logout = () => {
+      store.commit('user/setUser', {})
+      // 清空购物车
+      store.commit('cart/setCart', [])
+      router.push('/login')
+    }
+      return { profile, logout }
   }
 }
 </script>
