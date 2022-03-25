@@ -26,10 +26,9 @@ import { ref } from 'vue'
 import HomePanel from './home-panel'
 import { findBrand } from '@/api/home'
 import { useLazyData } from '@/hooks'
-import XtxSkeleton from './home-skeleton.vue'
 export default {
   name: 'HomeBrand',
-  components: { HomePanel, XtxSkeleton },
+  components: { HomePanel },
   setup () {
     // 获取数据
     // const brands = ref([])
@@ -55,15 +54,15 @@ export default {
 
 <style scoped lang='less'>
 .skeleton {
-    width: 100%;
-    display: flex;
-    .item {
-      margin-right: 10px;
-      &:nth-child(5n) {
-        margin-right: 0;
-      }
+  width: 100%;
+  display: flex;
+  .item {
+    margin-right: 10px;
+    &:nth-child(5n) {
+      margin-right: 0;
     }
   }
+}
 .home-panel {
   background:#f5f5f5
 }

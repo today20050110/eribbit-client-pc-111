@@ -1,6 +1,6 @@
 <template>
   <div class="goods-image">
-    <!-- 大圖 -->
+    <!-- 大图 -->
     <div v-show="show" class="large" :style="[{backgroundImage:`url(${images[currIndex]})`},largePosition]"></div>
     <!-- 中图 -->
     <div class="middle" ref="target">
@@ -8,7 +8,7 @@
       <!-- 遮罩色块 -->
       <div v-show="show" class="layer" :style="layerPosition"></div>
     </div>
-    <!-- 小圖 -->
+    <!-- 小图 -->
     <ul class="small">
       <li v-for="(img,i) in images" :key="img" :class="{active:i===currIndex}">
         <img @mouseenter="currIndex=i" :src="img" alt="">
@@ -27,7 +27,6 @@ export default {
       default: () => []
     }
   },
-
   setup (props) {
     // 当前预览图的索引
     const currIndex = ref(0)
@@ -71,7 +70,6 @@ export default {
   }
 }
 </script>
-/* eslint-disable eol-last */
 <style scoped lang="less">
 .goods-image {
   width: 480px;

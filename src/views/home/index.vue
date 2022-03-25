@@ -1,41 +1,39 @@
 <template>
-  <div class="page-home">
-    <!-- 首頁入口 -->
-    <div class="home-entry">
-      <div class="container">
-        <!-- 左侧分类 -->
-        <HomeCategory />
-        <!-- 輪播圖 -->
-        <HomeBanner />
-      </div>
+  <!-- 首页入口 -->
+  <div class="home-entry">
+    <div class="container">
+      <!-- 左侧分类 -->
+      <HomeCategory />
+      <!-- 轮播图 -->
+      <HomeBanner />
     </div>
-    <!-- 新鮮好物 -->
-      <HomeNew />
-    <!-- 人氣推薦 -->
-      <HomeHHot />
-      <!-- 熱門品牌 -->
-      <HomeBrand />
-      <!-- 商品區域 -->\
-      <HomeProduct />
-      <!-- 最新專題 -->
-      <HomeSpecial />
   </div>
+  <!-- 新鲜好物 -->
+  <HomeNew />
+  <!-- 人气推荐 -->
+  <HomeHot />
+  <!-- 品牌组件 -->
+  <HomeBrand />
+  <!-- 产品区块 -->
+  <HomeProduct />
+  <!-- 最新专题 -->
+  <HomeSpecial />
 </template>
 <script>
 import HomeCategory from './components/home-category'
 import HomeBanner from './components/home-banner'
 import HomeNew from './components/home-new'
-import HomeHHot from './components/home-hot'
-import HomeBrand from './components/home-brand.vue'
-import HomeProduct from './components/home-product.vue'
-import HomeSpecial from './components/home-special.vue'
+import HomeHot from './components/home-hot'
+import HomeBrand from './components/home-brand'
+import HomeProduct from './components/home-product'
+import HomeSpecial from './components/home-special'
 export default {
-  name: 'PageHome',
+  name: 'HomePage',
   components: {
     HomeCategory,
     HomeBanner,
     HomeNew,
-    HomeHHot,
+    HomeHot,
     HomeBrand,
     HomeProduct,
     HomeSpecial

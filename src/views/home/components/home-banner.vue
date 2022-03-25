@@ -9,7 +9,7 @@ import { findBanner } from '@/api/home'
 export default {
   name: 'HomeBanner',
   setup () {
-    // 獲取輪播圖數據
+    // 获取轮播图数据
     const sliders = ref([])
     findBanner().then(data => {
       sliders.value = data.result
@@ -27,12 +27,12 @@ export default {
   top: 0;
   z-index: 98
 }
-// 覆蓋樣式
+// 覆盖样式
 .xtx-carousel {
-  ::v-deep .carousel-btn.prev {
+  :deep(.carousel-btn.prev){
     left: 270px;
   }
-  ::v-deep .carousel-indicator {
+  :deep(.carousel-indicator) {
     padding-left: 250px;
   }
 }

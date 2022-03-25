@@ -3,11 +3,11 @@
     <div class="container">
       <ul>
         <template v-if="profile.token">
-          <li><a href="javascript:;"><i class="iconfont icon-user"></i>{{profile.account}}</a></li>
+          <li><RouterLink to="/member"><i class="iconfont icon-user"></i>{{profile.account}}</RouterLink></li>
           <li><a @click="logout()" href="javascript:;">退出登录</a></li>
         </template>
         <template v-else>
-          <li><router-link to="/login">请先登录</router-link></li>
+          <li><RouterLink to="/login">请先登录</RouterLink></li>
           <li><a href="javascript:;">免费注册</a></li>
         </template>
         <li><a href="javascript:;">我的订单</a></li>
@@ -20,20 +20,20 @@
   </nav>
 </template>
 <script>
-/* eslint-disable indent */
-import { useStore } from 'vuex'
 import { computed } from 'vue'
+import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 export default {
   name: 'AppTopnav',
-  // 獲取用戶的登陸信息才能控制切換導航菜單
   setup () {
-      const store = useStore()
-      // 使用vuex中的state需要設置計算屬性
-      const profile = computed(() => {
-          return store.state.user.profile
-      })
-      // 退出登录
+    // 获取用户的登录信息才能控制切换导航菜单
+    const store = useStore()
+    // 使用vuex中的state需要设置计算属性，否则不是响应式
+    const profile = computed(() => {
+      return store.state.user.profile
+    })
+
+    // 退出登录
     // 1. 清空本地存储信息和vuex的用户信息
     // 2. 跳转登录
     const router = useRouter()
@@ -43,7 +43,7 @@ export default {
       store.commit('cart/setCart', [])
       router.push('/login')
     }
-      return { profile, logout }
+    return { profile, logout }
   }
 }
 </script>
@@ -77,5 +77,5 @@ export default {
     }
   }
 }
-// ~ 選擇器作用: 選擇當前選擇器後面的所有兄弟元素
+// ~ 选择器作用：选择当前选择器后的所有元素
 </style>

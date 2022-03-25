@@ -1,37 +1,12 @@
 <template>
-  <!-- <ul class="app-header-nav">
-    {{$store.state.category.list}}
-    <li class="home"><RouterLink to="/">首页</RouterLink></li>
-    <li>
-      <a href="#">美食</a>
-      <div class="layer">
-        <ul>
-          <li v-for="i in 10" :key="i">
-            <a href="#">
-              <img src="http://zhoushugang.gitee.io/erabbit-client-pc-static/uploads/img/category%20(4).png" alt="">
-              <p>果干</p>
-            </a>
-          </li>
-        </ul>
-      </div>
-    </li>
-    <li><a href="#">餐厨</a></li>
-    <li><a href="#">艺术</a></li>
-    <li><a href="#">电器</a></li>
-    <li><a href="#">居家</a></li>
-    <li><a href="#">洗护</a></li>
-    <li><a href="#">孕婴</a></li>
-    <li><a href="#">服装</a></li>
-    <li><a href="#">杂货</a></li>
-  </ul> -->
   <ul class="app-header-nav">
     <li class="home"><RouterLink to="/">首页</RouterLink></li>
-    <li v-for="item in list" :key="item.id" @mouseleave="hide(item)" @mousemove="show(item)">
-      <RouterLink :to="`/category/${item.id}`" @click="hide(item)">{{item.name}}</RouterLink>
+    <li v-for="item in list" :key="item.id" @mousemove="show(item)" @mouseleave="hide(item)">
+      <RouterLink @click="hide(item)" :to="`/category/${item.id}`">{{item.name}}</RouterLink>
       <div class="layer" :class="{open:item.open}">
         <ul>
           <li v-for="sub in item.children" :key="sub.id">
-            <RouterLink :to="`/category/sub/${sub.id}`" @click="hide(item)">
+            <RouterLink  @click="hide(item)" :to="`/category/sub/${sub.id}`">
               <img :src="sub.picture" alt="">
               <p>{{sub.name}}</p>
             </RouterLink>
@@ -41,41 +16,40 @@
     </li>
   </ul>
 </template>
-
 <script>
-import { useStore } from 'vuex'
 import { computed } from 'vue'
+import { useStore } from 'vuex'
 export default {
   name: 'AppHeaderNav',
   setup () {
     const store = useStore()
-    // 拿到vuex中的分類列表
+    // 拿到vuex中的分类列表
     const list = computed(() => {
       return store.state.category.list
     })
-    // 跳轉的時候部會關閉二級類目, 通過數據來控制
-    // 1. vuex每個分類加上open數據
-    // 2. vuex提供顯示和隱藏函數,修改open數據
-    // 3. 組件中使用vuex中的函數, 使用時間來綁定,提供一個顯示和隱藏的類名
+
+    // 跳转的时候不会关闭二级类目，通过数据来控制
+    // 1. vuex每个分类加上open数据
+    // 2. vuex提供显示和隐藏函数，修改open数据
+    // 3. 组件中使用vuex中的函数，使用时间来绑定，提供一个类名显示隐藏的类名
     const show = (item) => {
-      store.commit('category/show', item)
+      store.commit('category/show', item.id)
     }
     const hide = (item) => {
-      store.commit('category/hide', item)
+      store.commit('category/hide', item.id)
     }
     return { list, show, hide }
   }
 }
 </script>
-
-<style scoped lang='less'>
+<style scoped lang="less">
 .app-header-nav {
   width: 820px;
   display: flex;
   justify-content: space-around;
   padding-left: 40px;
   position: relative;
-  z-index: 998;
+  z-index: 999;
   > li {
     margin-right: 40px;
     width: 38px;
@@ -91,7 +65,7 @@ export default {
         color: @xtxColor;
         border-bottom: 1px solid @xtxColor;
       }
-      // 顯示二級類目
+      // 显示二级类目
       // > .layer {
       //   height: 132px;
       //   opacity: 1;
@@ -99,8 +73,12 @@ export default {
     }
   }
 }
-// 二級類名彈層
+// 二级类名弹层
 .layer {
+  &.open {
+    height: 132px;
+    opacity: 1;
+  }
   width: 1240px;
   background-color: #fff;
   position: absolute;
@@ -111,10 +89,6 @@ export default {
   opacity: 0;
   box-shadow: 0 0 5px #ccc;
   transition: all .2s .1s;
-  &.open {
-    height: 132px;
-    opacity: 1;
-  }
   ul {
     display: flex;
     flex-wrap: wrap;

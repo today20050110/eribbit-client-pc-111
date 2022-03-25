@@ -1,7 +1,7 @@
 <template>
   <HomePanel title="最新专题">
     <template v-slot:right><XtxMore /></template>
-    <div class="special-list" ref="target">
+    <div ref="target" class="special-list">
       <div class="special-item" v-for="item in specialList" :key="item.id">
         <RouterLink to="/">
           <img :src="item.cover" alt />
@@ -24,8 +24,8 @@
 </template>
 
 <script>
-import HomePanel from './home-panel'
 import { findSpecial } from '@/api/home'
+import HomePanel from './home-panel'
 import { useLazyData } from '@/hooks'
 export default {
   name: 'HomeSpecial',

@@ -1,29 +1,28 @@
-
 <template>
-  <div class='home-category' @mouseleave="categoryId=null">
+  <div class="home-category" @mouseleave="categoryId=null">
     <ul class="menu">
-      <li :class="{active:categoryId===item.id}" v-for="item in menuList" :key="item.id" @mouseenter="categoryId=item.id">
-        <RouterLink :to="`/category/${item.id}`">{{item.name}}</RouterLink>
+      <li :class="{active:categoryId&&categoryId===item.id}" v-for="item in menuList" :key="item.id" @mouseenter="categoryId=item.id">
+        <RouterLink :to="`/category/${item.id}`">{{ item.name }}</RouterLink>
         <template v-if="item.children">
           <RouterLink
             v-for="sub in item.children"
             :key="sub.id"
-            :to="`/category/sub/${sub.id}`">
-            {{sub.name}}
-          </RouterLink>
+            :to="`/category/sub/${sub.id}`"
+            >{{ sub.name }}</RouterLink
+          >
         </template>
         <!-- 骨架 -->
         <template v-else>
-          <XtxSkeleton width="60px" height="18px" style="margin-right:5px" bg="rgba(255,255,255,0.2)" />
-          <XtxSkeleton width="50px" height="18px" bg="rgba(255,255,255,0.2)" />
+          <XtxSkeleton height="18px" width="60px" bg="rgba(255,255,255,0.2)" style="margin-right:5px" />
+          <XtxSkeleton height="18px" width="50px" bg="rgba(255,255,255,0.2)"/>
         </template>
       </li>
     </ul>
-    <!-- 彈層 -->
+    <!-- 弹层 -->
     <div class="layer">
-      <h4 v-if="currCategory">{{currCategory.id==='brand'?'品牌':'分类'}}推荐 <small>根据您的购买或浏览记录推荐</small></h4>
+      <h4>{{currCategory&&currCategory.id==='brand'?'品牌':'分类'}}推荐 <small>根据您的购买或浏览记录推荐</small></h4>
       <!-- 商品 -->
-      <ul v-if="currCategory && currCategory.goods && currCategory.goods.length">
+      <ul v-if="currCategory && currCategory.goods">
         <li v-for="item in currCategory.goods" :key="item.id">
           <RouterLink to="/">
             <img :src="item.picture" alt="">
@@ -36,14 +35,14 @@
         </li>
       </ul>
       <!-- 品牌 -->
-      <ul v-if="currCategory && currCategory.brands && currCategory.brands.length">
-        <li class="brand" v-for="item in currCategory.brands" :key="item.id">
+      <ul v-if="currCategory && currCategory.brands">
+        <li class="brand" v-for="brand in currCategory.brands" :key="brand.id">
           <RouterLink to="/">
-            <img :src="item.picture" alt="">
+            <img :src="brand.picture" alt="">
             <div class="info">
-              <p class="place"><i class="iconfont icon-dingwei"></i>{{item.place}}</p>
-              <p class="name ellipsis">{{item.name}}</p>
-              <p class="desc ellipsis-2">{{item.desc}}</p>
+              <p class="place"><i class="iconfont icon-dingwei"></i>{{brand.place}}</p>
+              <p class="name ellipsis">{{brand.name}}</p>
+              <p class="desc ellipsis-2">{{brand.desc}}</p>
             </div>
           </RouterLink>
         </li>
@@ -53,30 +52,27 @@
 </template>
 
 <script>
+import { computed, reactive, ref } from 'vue'
 import { useStore } from 'vuex'
-import { reactive, computed, ref } from 'vue'
-import { findBrand } from '@/api/home.js'
+import { findBrand } from '@/api/home'
 export default {
   name: 'HomeCategory',
-  // 1. 获取vuex的一级分类，并且只需要两个二级分类
-  // 2. 需要在组件内部，定义一个品牌数据
-  // 3. 根据vuex的分类数据和组件中定义品牌数据，得到左侧分类完整数据(9分类+1品牌)数组
-  // 4. 进行渲染即可
   setup () {
+    const store = useStore()
+    // 最终使用的数据 = 9个分类() + 1个品牌
     const brand = reactive({
       id: 'brand',
       name: '品牌',
-      children: [{ id: 'brand-chilren', name: '品牌推荐' }],
+      children: [{ id: 'brand-children', name: '品牌推荐' }],
       // 品牌列表
       brands: []
     })
-    const store = useStore()
     const menuList = computed(() => {
-      const list = store.state.category.list.map(item => {
+      // 得到9个分类切每个一级分类下的子分类只有两个
+      const list = store.state.category.list.map((item) => {
         return {
           id: item.id,
           name: item.name,
-          // 防止初始化没有children的时候调用slice函数报错
           children: item.children && item.children.slice(0, 2),
           goods: item.goods
         }
@@ -84,13 +80,14 @@ export default {
       list.push(brand)
       return list
     })
-    // 获取当前分类逻辑
-    // 得到彈出層的推薦商品數據
+
+    // 得到弹出层的推荐商品数据
     const categoryId = ref(null)
     const currCategory = computed(() => {
       return menuList.value.find(item => item.id === categoryId.value)
     })
-    // 獲取品牌數據
+
+    // 获取品牌数据，尽量不用使用async再setup上
     findBrand().then(data => {
       brand.brands = data.result
     })
@@ -104,7 +101,7 @@ export default {
 .home-category {
   width: 250px;
   height: 500px;
-  background: rgba(0,0,0,0.8);
+  background: rgba(0, 0, 0, 0.8);
   position: relative;
   z-index: 99;
   .menu {
@@ -124,8 +121,8 @@ export default {
       }
     }
   }
-  // 彈層樣式
-   .layer {
+  // 弹出层样式
+    .layer {
     width: 990px;
     height: 500px;
     background: rgba(255,255,255,0.8);
@@ -191,8 +188,8 @@ export default {
           }
         }
       }
-      // 品牌的樣式
-         li.brand {
+      // 品牌的样式
+      li.brand {
         height: 180px;
         a {
           align-items: flex-start;
@@ -218,7 +215,7 @@ export default {
     }
   }
 }
-// 骨架動畫
+// 骨架动画
 .xtx-skeleton {
   animation: fade 1s linear infinite alternate;
 }

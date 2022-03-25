@@ -4,8 +4,8 @@
       <dt>{{item.name}}</dt>
       <dd>
         <template v-for="val in item.values" :key="val.name">
-          <img :class="{selected: val.selected,disabled:val.disabled}" @click="changeSku(item, val)" v-if="val.picture" :src="val.picture" :title="val.name" >
-          <span :class="{selected: val.selected,disabled:val.disabled}" @click="changeSku(item, val)" v-else>{{val.name}}</span>
+          <img :class="{selected:val.selected,disabled:val.disabled}" @click="changeSku(item,val)" v-if="val.picture" :src="val.picture" :title="val.name" >
+          <span :class="{selected:val.selected,disabled:val.disabled}" @click="changeSku(item,val)" v-else>{{val.name}}</span>
         </template>
       </dd>
     </dl>
@@ -14,6 +14,7 @@
 <script>
 import powerSet from '@/vender/power-set'
 const spliter = '★'
+// 得到一个路径字典对象
 const getPathMap = (skus) => {
   // 1. 得到所有的sku集合  props.goods.skus
   // 2. 从所有的sku中筛选出有效的sku
@@ -48,8 +49,8 @@ const getSelectedValues = (specs) => {
   const arr = []
   specs.forEach(item => {
     // 选中的按钮对象
-    const selectedVal = item.values.find(val => val.selected)
-    arr.push(selectedVal ? selectedVal.name : undefined)
+    const seletedVal = item.values.find(val => val.selected)
+    arr.push(seletedVal ? seletedVal.name : undefined)
   })
   return arr
 }
@@ -80,6 +81,7 @@ const initDefaultSelected = (goods, skuId) => {
     val.selected = true
   })
 }
+
 export default {
   name: 'GoodsSku',
   props: {
@@ -115,9 +117,8 @@ export default {
         })
         val.selected = true
       }
-      // ☆點擊按鈕時,更新按鈕禁用狀態
+      // ☆点击按钮时：更新按钮禁用状态
       updateDisabledStatus(props.goods.specs, pathMap)
-      // console.log(getSelectedValues(props.goods.specs))
       // 将你选择的sku信息通知父组件{skuId,price,oldPrice,inventory,specsText}
       // 1. 选择完整的sku组合按钮，才可以拿到这些信息，提交父组件
       // 2. 不是完整的sku组合按钮，提交空对象父组件
@@ -134,7 +135,6 @@ export default {
           // 属性名：属性值 属性名1：属性值1 ... 这样的字符串
           specsText: sku.specs.reduce((p, c) => `${p} ${c.name}：${c.valueName}`, '').trim()
         })
-        // console.log(sku.specs.reduce((p, c) => `${p} ${c.name}：${c.valueName}`, '').trim())
       } else {
         // 不完整
         // 父组件需要判断是否规格选择完整，不完整不能加购物车。

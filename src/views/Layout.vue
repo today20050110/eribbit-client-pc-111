@@ -1,31 +1,28 @@
 <template>
-  <!-- 頂部通欄 -->
-  <AppTopnav/>
-  <!-- 頭部組件 -->
-  <AppHeader/>
-  <!-- 吸頂頭部 -->
-  <AppHeaderSticky/>
-  <!-- 內容容器 -->
-  <div class="app-body">
-    <!-- 二級路由 -->
-    <RouterView />
-  </div>
-  <!-- 底部組件 -->
-  <AppFooter/>
-  <!-- <button @click="$store.commit('user/setUser', {})">logout</button>
-  <button @click="$store.commit('user/setUser', { token: 123, account: 'zhousg' })">login</button> -->
+<!-- 顶部通栏 -->
+<AppNavbar />
+<!-- 头部组件 -->
+<AppHeader />
+<!-- 吸顶头部 -->
+<AppHeaderSticky />
+<!-- 内容容器 -->
+<div class="app-body">
+  <!-- 二级路由 -->
+  <RouterView />
+</div>
+<!-- 底部组件 -->
+<AppFooter />
 </template>
-
 <script>
-import AppTopnav from '@/components/app-topnav'
-import AppHeader from '@/components/app-header.vue'
-import AppFooter from '@/components/app-footer.vue'
-import AppHeaderSticky from '@/components/app-header-sticky.vue'
+import AppNavbar from '@/components/app-navbar'
+import AppHeader from '@/components/app-header'
+import AppFooter from '@/components/app-footer'
+import AppHeaderSticky from '@/components/app-header-sticky'
 import { useStore } from 'vuex'
 export default {
   name: 'Layout',
   components: {
-    AppTopnav,
+    AppNavbar,
     AppHeader,
     AppFooter,
     AppHeaderSticky
@@ -37,8 +34,7 @@ export default {
   }
 }
 </script>
-
-<style lang="less" scoped>
+<style scoped lang="less">
 .app-body {
   min-height: 600px;
 }
