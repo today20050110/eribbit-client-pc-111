@@ -4,10 +4,9 @@
       <!-- 面包屑 -->
       <XtxBread>
         <XtxBreadItem to="/">首页</XtxBreadItem>
-        <!-- <XtxBreadItem>{{topCategory.name}}</XtxBreadItem> -->
-        <transition name="fade-right" mode="out-in">
+        <Transition name="fade-right" mode="out-in">
           <XtxBreadItem :key="topCategory.id">{{topCategory.name}}</XtxBreadItem>
-        </transition>
+        </Transition>
       </XtxBread>
       <!-- 轮播图 -->
       <XtxCarousel :sliders="sliders" style="height:500px" />
@@ -23,55 +22,52 @@
           </li>
         </ul>
       </div>
-      <!-- 不同分类商品 -->
-      <!-- 分类关联商品 -->
+      <!-- 各个分类推荐商品 -->
       <div class="ref-goods" v-for="sub in subList" :key="sub.id">
         <div class="head">
           <h3>- {{sub.name}} -</h3>
-          <p class="tag">{{sub.desc}}</p>
-          <XtxMore :path="`/category/sub/${sub.id}`"/>
+          <p class="tag">温暖柔软，品质之选</p>
+          <XtxMore :path="`/category/sub/${sub.id}`" />
         </div>
         <div class="body">
-          <GoodsItem v-for="g in sub.goods" :key="g.id" :goods="g" />
+          <GoodsItem v-for="goods in sub.goods" :key="goods.id" :goods="goods" />
         </div>
       </div>
     </div>
   </div>
 </template>
 <script>
+import { computed, ref, watch } from 'vue'
 import { findBanner } from '@/api/home'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
-import { computed, ref, watch } from 'vue'
-import { findTopCategory } from '@/api/category'
 import GoodsItem from './components/goods-item'
+import { findTopCategory } from '@/api/category'
 export default {
   name: 'TopCategory',
-  components: {
-    GoodsItem
-  },
+  components: { GoodsItem },
   setup () {
     // 轮播图
     const sliders = ref([])
     findBanner().then(data => {
       sliders.value = data.result
     })
-    // 面包屑+所有分类 ====>vuex
+
+    // 面包屑+所有子分类 ====> vuex
     const store = useStore()
     const route = useRoute()
     const topCategory = computed(() => {
-      // 當前頂級分類 === 根據路由上的ID去VUEX中category模塊的list中查找
       let cate = {}
-      // console.log(route.params.id)
-      // console.log(store.state.category.list)
+      // 当前顶级分类 === 根据路由上的ID去vuex中category模块的list中查找
       const item = store.state.category.list.find(item => {
         return item.id === route.params.id
       })
-      // 找到數據賦值
+      // 找到数据赋值
       if (item) cate = item
       return cate
     })
-    // 獲取各個子類目下推荐商品
+
+    // 获取各个子类目下推荐商品
     const subList = ref([])
     const getSubList = () => {
       findTopCategory(route.params.id).then(data => {
@@ -79,7 +75,7 @@ export default {
       })
     }
     watch(() => route.params.id, (newVal) => {
-      // 加上一個嚴謹判斷, 在頂級類目下才發請求
+      // newVal && getSubList() 加上一个严谨判断，在顶级类名下才发请求
       if (newVal && `/category/${newVal}` === route.path) getSubList()
     }, { immediate: true })
 
@@ -107,6 +103,7 @@ export default {
       display: flex;
       padding: 0 32px;
       flex-wrap: wrap;
+      min-height: 160px;
       li {
         width: 168px;
         height: 160px;
@@ -128,7 +125,7 @@ export default {
       }
     }
   }
-  // 分类关联商品
+  // 推荐商品
   .ref-goods {
     background-color: #fff;
     margin-top: 20px;

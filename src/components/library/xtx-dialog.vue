@@ -1,82 +1,70 @@
 <template>
-  <div class="xtx-confirm" :class="{fade}">
+  <div class="xtx-dialog" :class="{fade}" v-show="visible">
     <div class="wrapper" :class="{fade}">
       <div class="header">
         <h3>{{title}}</h3>
-        <a @click="cancel" href="JavaScript:;" class="iconfont icon-close-new"></a>
+        <a @click="closeDialog()" href="JavaScript:;" class="iconfont icon-close-new"></a>
       </div>
       <div class="body">
-        <i class="iconfont icon-warning"></i>
-        <span>{{text}}</span>
+        对话框内容
+        <slot />
       </div>
       <div class="footer">
-        <XtxButton @click="cancel" size="mini" type="gray">取消</XtxButton>
-        <XtxButton @click="submit" size="mini" type="primary">确认</XtxButton>
+        <slot name="footer" />
       </div>
     </div>
   </div>
 </template>
 <script>
-import { onMounted, ref } from 'vue'
-import XtxButton from './xtx-button'
+// vue3.0 v-model:visible 语法糖，拆解 （:visible + @update:visible）
+// vue2.0 visible.sync 语法糖，拆解 （:visible + @update:visible）
+import { ref, watch } from 'vue'
 export default {
-  name: 'XtxConfirm',
-  components: { XtxButton },
+  name: 'XtxDialog',
   props: {
     title: {
       type: String,
-      default: '温馨提示'
-    },
-    text: {
-      type: String,
       default: ''
     },
-    cancelCallback: {
-      type: Function
-    },
-    submitCallback: {
-      type: Function
+    visible: {
+      type: Boolean,
+      default: false
     }
   },
-  setup (props) {
-    // 对话框默认隐藏
+  setup (props, { emit }) {
     const fade = ref(false)
-    // 组件渲染完毕后
-    onMounted(() => {
-      // 过渡效果需要在元素创建完毕后延时一会加上才会触发
+
+    // visible的值为true打开对话框，否则就是关闭对话框，其实控制fade的值即可
+    watch(() => props.visible, (newVal) => {
       setTimeout(() => {
-        fade.value = true
+        fade.value = newVal
       }, 0)
-    })
-    // 取消
-    const cancel = () => {
-      // 其他事情
-      props.cancelCallback()
+    }, { immediate: true })
+
+    // 自己关闭对话框，修改父组件数据状态
+    const closeDialog = () => {
+      emit('update:visible', false)
     }
-    // 确认
-    const submit = () => {
-      // 其他事情
-      props.submitCallback()
-    }
-    return { cancel, submit, fade }
+
+    return { fade, closeDialog }
   }
 }
 </script>
 <style scoped lang="less">
-.xtx-confirm {
+.xtx-dialog {
   position: fixed;
   left: 0;
   top: 0;
   width: 100%;
   height: 100%;
-  z-index: 8888;
+  z-index: 8887;
   background: rgba(0,0,0,0);
   &.fade {
     transition: all 0.4s;
     background: rgba(0,0,0,.5);
   }
   .wrapper {
-    width: 400px;
+    width: 600px;
     background: #fff;
     border-radius: 4px;
     position: absolute;
@@ -89,11 +77,6 @@ export default {
       transform: translate(-50%,-50%);
       opacity: 1;
     }
-    .header,.footer {
-      height: 50px;
-      line-height: 50px;
-      padding: 0 20px;
-    }
     .body {
       padding: 20px 40px;
       font-size: 16px;
@@ -104,22 +87,24 @@ export default {
       }
     }
     .footer {
-      text-align: right;
-      .xtx-button {
-        margin-left: 20px;
-      }
+      text-align: center;
+      padding: 10px 0 30px 0;
     }
     .header {
       position: relative;
+      height: 70px;
+      line-height: 70px;
+      padding: 0 20px;
+      border-bottom: 1px solid #f5f5f5;
       h3 {
         font-weight: normal;
         font-size: 18px;
       }
       a {
         position: absolute;
-        right: 15px;
-        top: 15px;
-        font-size: 20px;
+        right: 25px;
+        top: 25px;
+        font-size: 24px;
         width: 20px;
         height: 20px;
         line-height: 20px;

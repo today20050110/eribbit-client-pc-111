@@ -1,12 +1,12 @@
 <template>
   <div class="cart">
     <!-- 购物车图标 -->
-      <RouterLink class="curr" to="/cart">
-        <i class="iconfont icon-cart"></i>
-        <em>{{$store.getters['cart/validTotal']}}</em>
-      </RouterLink>
+    <RouterLink class="curr" to="/cart">
+      <i class="iconfont icon-cart"></i>
+      <em>{{$store.getters['cart/validTotal']}}</em>
+    </RouterLink>
     <!-- 购物车弹出层 -->
-    <div class="layer" v-if="$store.getters['cart/validTotal'] > 0 && $route.path !== '/cart'">
+    <div class="layer" v-if="$store.getters['cart/validTotal']>0&&$route.path!=='/cart'">
       <div class="list">
         <div class="item" v-for="goods in $store.getters['cart/validList']" :key="goods.skuId">
           <RouterLink :to="`/product/${goods.id}`">
@@ -35,20 +35,20 @@
 </template>
 <script>
 import { useStore } from 'vuex'
-import Message from './library/Message'
-// import { useStore } from 'vuex'
 // import Message from './library/Message'
 export default {
   name: 'AppHeaderCart',
   setup () {
     const store = useStore()
     store.dispatch('cart/findCart').then(() => {
-      Message({ type: 'success', text: '更新本地購物車成功' })
+      // Message({ type: 'success', text: '更新本地购物车成功' })
     })
+
     // 删除函数
     const deleteCart = (skuId) => {
       store.dispatch('cart/deleteCart', skuId)
     }
+
     return { deleteCart }
   }
 }
@@ -56,6 +56,7 @@ export default {
 <style scoped lang="less">
 .cart {
   width: 50px;
+  // 加下限制
   position: relative;
   z-index: 600;
   .curr {
@@ -81,12 +82,14 @@ export default {
       font-family: Arial;
     }
   }
+  // 鼠标经过显示弹层
   &:hover {
     .layer {
       opacity: 1;
       transform: none
     }
   }
+  // 弹层样式
   .layer {
     opacity: 0;
     transition: all .4s .2s;
